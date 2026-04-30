@@ -38,7 +38,7 @@ class EmployeeController extends Controller
             $query->where('status', $request->status);
         }
         
-        $employees = $query->orderBy('created_at', 'desc')->paginate(10);
+        $employees = $query->orderBy('created_at', 'desc')->paginate(5);
         $departments = Department::orderBy('name')->get();
         
         return view('employees.index', compact('employees', 'departments'));

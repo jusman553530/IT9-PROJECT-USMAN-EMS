@@ -33,7 +33,7 @@ class AttendanceController extends Controller
         $query->where('status', $request->status);
     }
     
-    $attendances = $query->paginate(15);
+    $attendances = $query->paginate(5);
     $employees = Employee::where('status', 'active')->orderBy('first_name')->get();
     
     // Statistics - Fix this part

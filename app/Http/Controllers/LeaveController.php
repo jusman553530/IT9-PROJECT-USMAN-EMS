@@ -26,7 +26,7 @@ class LeaveController extends Controller
             $query->where('employee_id', $request->employee_id);
         }
         
-        $leaveRequests = $query->paginate(15);
+        $leaveRequests = $query->paginate(5);
         $employees = Employee::where('status', 'active')->orderBy('first_name')->get();
         
         $stats = [

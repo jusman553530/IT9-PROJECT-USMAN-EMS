@@ -52,9 +52,9 @@
                         @if($todayAttendance && $todayAttendance->time_in)
                             @php
                                 $start = \Carbon\Carbon::parse($todayAttendance->time_in);
-                                $now = \Carbon\Carbon::now();
-                                $hours = floor($start->diffInMinutes($now) / 60);
-                                $minutes = $start->diffInMinutes($now) % 60;
+                                $end = $todayAttendance->time_out ? \Carbon\Carbon::parse($todayAttendance->time_out) : \Carbon\Carbon::now();
+                                $hours = floor($start->diffInMinutes($end) / 60);
+                                $minutes = $start->diffInMinutes($end) % 60;
                             @endphp
                             {{ $hours }}h {{ $minutes }}m
                         @else
@@ -63,12 +63,12 @@
                     </p>
                 </div>
                 <div class="text-center">
-                    <p class="text-gray-500 text-xs mb-1">Pending Payroll</p>
-                    <p class="text-gray-900 font-semibold">{{ $pendingPayroll }}</p>
+                    <p class="text-gray-500 text-xs mb-1">This Week</p>
+                    <p class="text-gray-900 font-semibold">{{ $weekHours ?? '--' }}h</p>
                 </div>
                 <div class="text-center">
-                    <p class="text-gray-500 text-xs mb-1">Paid This Month</p>
-                    <p class="text-gray-900 font-semibold">${{ number_format($paidThisMonth) }}</p>
+                    <p class="text-gray-500 text-xs mb-1">This Month</p>
+                    <p class="text-gray-900 font-semibold">{{ $monthHours ?? '--' }}h</p>
                 </div>
                 @if($todayAttendance && !$todayAttendance->time_out)
                     <form action="{{ route('attendance.clock-out') }}" method="POST">
@@ -91,27 +91,28 @@
         </div>
     </div>
 
-    <!-- Payroll Stats Grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm text-center">
-            <p class="text-3xl font-semibold text-green-600 mb-1">${{ number_format($totalPayroll) }}</p>
+    @php
+        $totalDays = ($myAttendanceSummary['present'] ?? 0) + ($myAttendanceSummary['absent'] ?? 0) + ($myAttendanceSummary['on_leave'] ?? 0);
+        $rate = $totalDays > 0 ? round(($myAttendanceSummary['present'] ?? 0) / $totalDays * 100) : 0;
+    @endphp
+
+           <!-- Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm text-right">
+            <p class="text-3xl font-semibold text-green-600 mb-1">${{ number_format($totalPayroll, 2) }}</p>
             <p class="text-sm text-gray-600">Total Payroll (Month)</p>
         </div>
-        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm text-center">
-            <p class="text-3xl font-semibold text-blue-600 mb-1">${{ number_format($paidThisMonth) }}</p>
+        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm text-right">
+            <p class="text-3xl font-semibold text-blue-600 mb-1">${{ number_format($paidThisMonth, 2) }}</p>
             <p class="text-sm text-gray-600">Paid This Month</p>
         </div>
-        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm text-center">
+        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm text-right">
             <p class="text-3xl font-semibold text-yellow-600 mb-1">{{ $pendingPayroll }}</p>
             <p class="text-sm text-gray-600">Pending Payroll</p>
         </div>
-        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm text-center">
-            @php
-                $totalDays = ($myAttendanceSummary['present'] ?? 0) + ($myAttendanceSummary['absent'] ?? 0) + ($myAttendanceSummary['on_leave'] ?? 0);
-                $rate = $totalDays > 0 ? round(($myAttendanceSummary['present'] ?? 0) / $totalDays * 100) : 0;
-            @endphp
+        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm text-right">
             <p class="text-3xl font-semibold text-green-600 mb-1">{{ $rate }}%</p>
-            <p class="text-sm text-gray-600">My Attendance Rate</p>
+            <p class="text-sm text-gray-600">Attendance Rate</p>
         </div>
     </div>
 
@@ -131,7 +132,7 @@
                             <p class="text-xs text-gray-600">{{ $payroll->payroll_code }}</p>
                         </div>
                         <div class="text-right">
-                            <p class="text-sm font-semibold text-green-600">${{ number_format($payroll->net_salary) }}</p>
+                            <p class="text-sm font-semibold text-green-600">${{ number_format($payroll->net_salary, 2) }}</p>
                             <span class="text-xs px-2 py-0.5 rounded-full {{ $payroll->status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
                                 {{ ucfirst($payroll->status) }}
                             </span>

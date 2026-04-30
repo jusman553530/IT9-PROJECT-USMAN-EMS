@@ -22,7 +22,7 @@
         <div class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">{{ session('success') }}</div>
     @endif
 
-    <!-- Summary Cards -->
+        <!-- Summary Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
         <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
             <div class="flex items-center gap-3 mb-3">
@@ -33,8 +33,8 @@
                 </div>
                 <span class="text-sm text-gray-600">Total Approved</span>
             </div>
-            <p class="text-3xl font-semibold text-gray-900">${{ number_format($totalApproved) }}</p>
-            <p class="text-sm text-green-600 mt-1">{{ App\Models\Expense::where('status', 'approved')->count() }} expenses</p>
+            <p class="text-3xl font-semibold text-gray-900 text-right">${{ number_format($totalApproved) }}</p>
+            <p class="text-sm text-green-600 mt-1 text-right">{{ App\Models\Expense::where('status', 'approved')->count() }} expenses</p>
         </div>
         <div class="bg-white rounded-xl border border-yellow-200 p-6 shadow-sm">
             <div class="flex items-center gap-3 mb-3">
@@ -45,8 +45,8 @@
                 </div>
                 <span class="text-sm text-gray-600">Pending Review</span>
             </div>
-            <p class="text-3xl font-semibold text-yellow-700">${{ number_format($totalPending) }}</p>
-            <p class="text-sm text-yellow-600 mt-1">{{ App\Models\Expense::where('status', 'pending')->count() }} awaiting approval</p>
+            <p class="text-3xl font-semibold text-yellow-700 text-right">${{ number_format($totalPending) }}</p>
+            <p class="text-sm text-yellow-600 mt-1 text-right">{{ App\Models\Expense::where('status', 'pending')->count() }} awaiting approval</p>
         </div>
         <div class="bg-white rounded-xl border border-red-200 p-6 shadow-sm">
             <div class="flex items-center gap-3 mb-3">
@@ -57,11 +57,10 @@
                 </div>
                 <span class="text-sm text-gray-600">Rejected</span>
             </div>
-            <p class="text-3xl font-semibold text-red-700">${{ number_format($totalRejected) }}</p>
-            <p class="text-sm text-red-500 mt-1">This month</p>
+            <p class="text-3xl font-semibold text-red-700 text-right">${{ number_format($totalRejected) }}</p>
+            <p class="text-sm text-red-500 mt-1 text-right">This month</p>
         </div>
     </div>
-
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Expenses List -->
         <div class="lg:col-span-2">

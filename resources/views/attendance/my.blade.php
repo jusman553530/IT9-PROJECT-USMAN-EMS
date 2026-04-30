@@ -20,21 +20,21 @@
     @endphp
 
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm text-center">
-            <p class="text-3xl font-semibold text-green-600 mb-1">{{ $presentCount }}</p>
-            <p class="text-sm text-gray-600">Days Present</p>
+        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+            <p class="text-sm text-gray-600 mb-1">Days Present</p>
+            <p class="text-3xl font-semibold text-green-600 text-right">{{ $presentCount }}</p>
         </div>
-        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm text-center">
-            <p class="text-3xl font-semibold text-red-500 mb-1">{{ $absentCount }}</p>
-            <p class="text-sm text-gray-600">Days Absent</p>
+        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+            <p class="text-sm text-gray-600 mb-1">Days Absent</p>
+            <p class="text-3xl font-semibold text-red-500 text-right">{{ $absentCount }}</p>
         </div>
-        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm text-center">
-            <p class="text-3xl font-semibold text-blue-500 mb-1">{{ $leaveCount }}</p>
-            <p class="text-sm text-gray-600">On Leave</p>
+        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+            <p class="text-sm text-gray-600 mb-1">On Leave</p>
+            <p class="text-3xl font-semibold text-blue-500 text-right">{{ $leaveCount }}</p>
         </div>
-        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm text-center">
-            <p class="text-3xl font-semibold text-green-600 mb-1">{{ $rate }}%</p>
-            <p class="text-sm text-gray-600">Attendance Rate</p>
+        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+            <p class="text-sm text-gray-600 mb-1">Attendance Rate</p>
+            <p class="text-3xl font-semibold text-green-600 text-right">{{ $rate }}%</p>
         </div>
     </div>
 

@@ -18,56 +18,48 @@
     <!-- Stats Cards -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 mb-2">
                 <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
                     <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
                 </div>
-                <div>
-                    <p class="text-sm text-gray-600">Total</p>
-                    <p class="text-xl font-semibold text-gray-900">{{ $stats['total'] ?? 0 }}</p>
-                </div>
+                <span class="text-sm text-gray-600">Total</span>
             </div>
+            <p class="text-2xl font-semibold text-gray-900 text-right">{{ $stats['total'] ?? 0 }}</p>
         </div>
         <div class="bg-white rounded-xl border border-yellow-200 p-4 shadow-sm">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 mb-2">
                 <div class="w-10 h-10 rounded-lg bg-yellow-100 flex items-center justify-center">
                     <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
-                <div>
-                    <p class="text-sm text-yellow-600">Pending</p>
-                    <p class="text-xl font-semibold text-yellow-700">{{ $stats['pending'] ?? 0 }}</p>
-                </div>
+                <span class="text-sm text-gray-600">Pending</span>
             </div>
+            <p class="text-2xl font-semibold text-yellow-700 text-right">{{ $stats['pending'] ?? 0 }}</p>
         </div>
         <div class="bg-white rounded-xl border border-green-200 p-4 shadow-sm">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 mb-2">
                 <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
                     <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
-                <div>
-                    <p class="text-sm text-green-600">Completed</p>
-                    <p class="text-xl font-semibold text-green-700">{{ $stats['completed'] ?? 0 }}</p>
-                </div>
+                <span class="text-sm text-gray-600">Completed</span>
             </div>
+            <p class="text-2xl font-semibold text-green-700 text-right">{{ $stats['completed'] ?? 0 }}</p>
         </div>
         <div class="bg-white rounded-xl border border-red-200 p-4 shadow-sm">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 mb-2">
                 <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
                     <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                     </svg>
                 </div>
-                <div>
-                    <p class="text-sm text-red-600">Overdue</p>
-                    <p class="text-xl font-semibold text-red-700">{{ $stats['overdue'] ?? 0 }}</p>
-                </div>
+                <span class="text-sm text-gray-600">Overdue</span>
             </div>
+            <p class="text-2xl font-semibold text-red-700 text-right">{{ $stats['overdue'] ?? 0 }}</p>
         </div>
     </div>
 

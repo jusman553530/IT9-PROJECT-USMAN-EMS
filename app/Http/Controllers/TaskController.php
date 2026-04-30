@@ -35,7 +35,7 @@ class TaskController extends Controller
             $query->where('assigned_to', $request->employee_id);
         }
         
-        $tasks = $query->paginate(15);
+        $tasks = $query->paginate(6);
         $departments = Department::orderBy('name')->get();
         $employees = Employee::where('status', 'active')->orderBy('first_name')->get();
         

@@ -118,41 +118,41 @@
                     </div>
                 </div>
 
-                <!-- Automatic Deductions (Read Only) -->
+                               <!-- Automatic Deductions (Read Only) -->
                 <div>
                     <h2 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Deductions (Auto-calculated)</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Income Tax (10%)</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">SSS (5%)</label>
                             <input 
                                 type="number" 
-                                name="tax" 
-                                id="tax"
-                                value="{{ old('tax', 0) }}"
+                                name="sss" 
+                                id="sss"
+                                value="0"
                                 step="0.01"
                                 readonly
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-red-600 font-medium"
                             >
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Health Insurance</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pag-IBIG (5%)</label>
                             <input 
                                 type="number" 
-                                name="health_insurance" 
-                                id="health_insurance"
-                                value="{{ old('health_insurance', 0) }}"
+                                name="pagibig" 
+                                id="pagibig"
+                                value="0"
                                 step="0.01"
                                 readonly
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-red-600 font-medium"
                             >
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Provident Fund</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">PhilHealth (3%)</label>
                             <input 
                                 type="number" 
-                                name="provident_fund" 
-                                id="provident_fund"
-                                value="{{ old('provident_fund', 0) }}"
+                                name="philhealth" 
+                                id="philhealth"
+                                value="0"
                                 step="0.01"
                                 readonly
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-red-600 font-medium"
@@ -231,14 +231,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const overtimeHours = document.getElementById('overtime_hours');
     const overtimePay = document.getElementById('overtime_pay');
     const bonusInput = document.getElementById('bonus');
-    const taxInput = document.getElementById('tax');
-    const healthInsurance = document.getElementById('health_insurance');
-    const providentFund = document.getElementById('provident_fund');
+    const sssInput = document.getElementById('sss');
+    const pagibigInput = document.getElementById('pagibig');
+    const philhealthInput = document.getElementById('philhealth');
     const totalDeductionsInput = document.getElementById('total_deductions');
     const netSalaryPreview = document.getElementById('net_salary_preview');
     const breakdown = document.getElementById('breakdown');
     
-    // Auto-fill base salary when employee is selected
     employeeSelect.addEventListener('change', function() {
         const selectedOption = this.options[this.selectedIndex];
         const salary = selectedOption.dataset.salary;
@@ -253,41 +252,35 @@ document.addEventListener('DOMContentLoaded', function() {
         const overtime = parseFloat(overtimePay.value) || 0;
         const bonus = parseFloat(bonusInput.value) || 0;
         
-        // Auto-calculate deductions
-        const incomeTax = baseSalary * 0.10; // 10% income tax
-        const healthIns = 500; // Fixed $500 health insurance
-        const provFund = baseSalary * 0.05; // 5% provident fund
+        const sss = baseSalary * 0.05;
+        const pagibig = baseSalary * 0.05;
+        const philhealth = baseSalary * 0.03;
+        const totalDeductions = sss + pagibig + philhealth;
         
-        taxInput.value = incomeTax.toFixed(2);
-        healthInsurance.value = healthIns.toFixed(2);
-        providentFund.value = provFund.toFixed(2);
-        
-        const totalDeductions = incomeTax + healthIns + provFund;
+        sssInput.value = sss.toFixed(2);
+        pagibigInput.value = pagibig.toFixed(2);
+        philhealthInput.value = philhealth.toFixed(2);
         totalDeductionsInput.value = totalDeductions.toFixed(2);
         
-        // Calculate net salary
         const totalEarnings = baseSalary + overtime + bonus;
         const netSalary = totalEarnings - totalDeductions;
         
-        netSalaryPreview.textContent = '$' + netSalary.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        netSalaryPreview.textContent = '₱' + netSalary.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         
-        // Show breakdown
         breakdown.innerHTML = `
-            <div class="flex justify-between"><span>Base Salary:</span><span class="text-green-600">+$${baseSalary.toFixed(2)}</span></div>
-            ${overtime > 0 ? `<div class="flex justify-between"><span>Overtime:</span><span class="text-green-600">+$${overtime.toFixed(2)}</span></div>` : ''}
-            ${bonus > 0 ? `<div class="flex justify-between"><span>Bonus:</span><span class="text-green-600">+$${bonus.toFixed(2)}</span></div>` : ''}
-            <div class="flex justify-between"><span>Income Tax (10%):</span><span class="text-red-500">-$${incomeTax.toFixed(2)}</span></div>
-            <div class="flex justify-between"><span>Health Insurance:</span><span class="text-red-500">-$${healthIns.toFixed(2)}</span></div>
-            <div class="flex justify-between"><span>Provident Fund (5%):</span><span class="text-red-500">-$${provFund.toFixed(2)}</span></div>
+            <div class="flex justify-between"><span>Base Salary:</span><span class="text-green-600">+₱${baseSalary.toFixed(2)}</span></div>
+            ${overtime > 0 ? `<div class="flex justify-between"><span>Overtime:</span><span class="text-green-600">+₱${overtime.toFixed(2)}</span></div>` : ''}
+            ${bonus > 0 ? `<div class="flex justify-between"><span>Bonus:</span><span class="text-green-600">+₱${bonus.toFixed(2)}</span></div>` : ''}
+            <div class="flex justify-between"><span>SSS (5%):</span><span class="text-red-500">-₱${sss.toFixed(2)}</span></div>
+            <div class="flex justify-between"><span>Pag-IBIG (5%):</span><span class="text-red-500">-₱${pagibig.toFixed(2)}</span></div>
+            <div class="flex justify-between"><span>PhilHealth (3%):</span><span class="text-red-500">-₱${philhealth.toFixed(2)}</span></div>
         `;
     }
     
-    // Event listeners
     [baseSalaryInput, overtimePay, bonusInput].forEach(input => {
         input.addEventListener('input', calculateAll);
     });
     
-    // Auto-calculate overtime pay
     overtimeHours.addEventListener('input', function() {
         const hours = parseFloat(this.value) || 0;
         const baseSalary = parseFloat(baseSalaryInput.value) || 0;
@@ -297,7 +290,6 @@ document.addEventListener('DOMContentLoaded', function() {
         calculateAll();
     });
     
-    // Initialize
     calculateAll();
 });
 </script>

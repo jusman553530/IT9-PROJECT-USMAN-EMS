@@ -23,7 +23,7 @@ class ExpenseController extends Controller
             $query->where('category', $request->category);
         }
         
-        $expenses = $query->paginate(15);
+        $expenses = $query->paginate(5);
         $departments = Department::orderBy('name')->get();
         
         $totalApproved = Expense::where('status', 'approved')->sum('amount');

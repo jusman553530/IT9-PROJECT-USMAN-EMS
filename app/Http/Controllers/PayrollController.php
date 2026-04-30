@@ -30,7 +30,7 @@ class PayrollController extends Controller
             $query->where('employee_id', $request->employee_id);
         }
         
-        $payrolls = $query->paginate(15);
+        $payrolls = $query->paginate(5);
         $employees = Employee::where('status', 'active')->orderBy('first_name')->get();
         
         // Statistics
@@ -70,7 +70,14 @@ class PayrollController extends Controller
     ]);
 
     $validated['payroll_code'] = Payroll::generatePayrollCode();
-    $validated['status'] = 'pending'; // Always pending when created
+    $validated['status'] = 'pending';
+    
+    // Divide base salary by 2 for semi-monthly payroll
+    $validated['base_salary'] = $validated['base_salary'] / 2;
+    
+    // Recalculate tax based on halved salary
+    $validated['tax'] = $validated['base_salary'] * 0.10;
+    $validated['deductions'] = 500 + ($validated['base_salary'] * 0.05); // Health insurance + Provident fund
     
     // Calculate net salary
     $totalEarnings = $validated['base_salary'] + 
@@ -84,7 +91,6 @@ class PayrollController extends Controller
     return redirect()->route('payroll.index')
         ->with('success', 'Payroll created and sent for approval.');
 }
-
     public function show(Payroll $payroll)
     {
         $payroll->load('employee.department', 'employee.position');

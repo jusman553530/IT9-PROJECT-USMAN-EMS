@@ -112,40 +112,5 @@
             {{ $departments->links() }}
         </div>
     @endif
-
-    <!-- Summary Section -->
-    @if($departments->count() > 0)
-        <div class="mt-8 bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-            <h2 class="text-lg font-semibold text-gray-900 mb-6">Department Summary</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div class="text-center">
-                    <p class="text-3xl font-semibold text-green-700 mb-1">
-                        {{ $departments->total() }}
-                    </p>
-                    <p class="text-sm text-gray-600">Total Departments</p>
-                </div>
-                <div class="text-center">
-                    <p class="text-3xl font-semibold text-green-700 mb-1">
-                        @php
-                            $totalEmployees = $departments->sum(function($dept) {
-                                return $dept->employees_count ?? $dept->employees()->count();
-                            });
-                        @endphp
-                        {{ $totalEmployees }}
-                    </p>
-                    <p class="text-sm text-gray-600">Total Employees</p>
-                </div>
-                <div class="text-center">
-                    <p class="text-3xl font-semibold text-green-700 mb-1">
-                        @php
-                            $avgEmployees = $totalEmployees > 0 ? round($totalEmployees / $departments->total()) : 0;
-                        @endphp
-                        {{ $avgEmployees }}
-                    </p>
-                    <p class="text-sm text-gray-600">Average per Department</p>
-                </div>
-            </div>
-        </div>
-    @endif
 </div>
 @endsection
