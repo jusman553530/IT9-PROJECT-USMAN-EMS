@@ -16,6 +16,24 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Admin\ProblemReportController as AdminProblemReportController;
 use Illuminate\Support\Facades\Route;
 
+// Put this at the TOP, right after the use statements
+Route::get('/debug-error', function() {
+    try {
+        // Test if user model works
+        $user = auth()->user();
+        echo "User: " . $user->email . "<br>";
+        echo "Role: " . $user->role . "<br>";
+        echo "isAdmin: " . ($user->isAdmin() ? 'yes' : 'no') . "<br>";
+        
+        // Test routes
+        echo "Employees route: " . route('employees.index') . "<br>";
+        echo "Departments route: " . route('departments.index') . "<br>";
+        echo "Payroll route: " . route('payroll.index') . "<br>";
+    } catch (\Exception $e) {
+        echo "Error: " . $e->getMessage();
+    }
+})->middleware('auth');
+
 // Guest routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
