@@ -49,7 +49,6 @@ class User extends Authenticatable
         return $this->hasMany(Task::class, 'assigned_by');
     }
 
-    // Role check methods
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
@@ -65,45 +64,18 @@ class User extends Authenticatable
         return $this->role === 'employee';
     }
 
-    // Check if user can manage a specific department
-    public function canManageDepartment($departmentId): bool
-    {
-        if ($this->isAdmin()) return true;
-        if ($this->isHeadDepartment() && $this->department_id == $departmentId) return true;
-        if ($this->isTeamLeader() && $this->department_id == $departmentId) return true;
-        return false;
-    }
-
-    // Check if user can view all employees
     public function canViewAllEmployees(): bool
     {
-        return in_array($this->role, ['admin', 'head_department', 'accountant']);
+        return in_array($this->role, ['admin', 'accountant']);
     }
 
-    // Check if user can manage payroll
     public function canManagePayroll(): bool
     {
         return in_array($this->role, ['admin', 'accountant']);
     }
 
-    // Check if user can create/manage tasks
     public function canManageTasks(): bool
     {
-        return in_array($this->role, ['admin', 'head_department', 'team_leader']);
-    }
-
-    // Get employees this user can see
-    public function getAccessibleEmployees()
-    {
-        if ($this->isAdmin() || $this->isAccountant()) {
-            return Employee::query();
-        }
-        
-        if ($this->isHeadDepartment() || $this->isTeamLeader()) {
-            return Employee::where('department_id', $this->department_id);
-        }
-        
-        // Regular employee - only themselves
-        return Employee::where('email', $this->email);
+        return $this->role === 'admin';
     }
 }
