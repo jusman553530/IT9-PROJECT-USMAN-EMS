@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\ProblemReportController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Middleware\CheckRole;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Admin\ProblemReportController as AdminProblemReportController;
 use Illuminate\Support\Facades\Route;
@@ -29,9 +30,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/', fn() => redirect()->route('dashboard'));
 
     // My Profile
-Route::get('/my-profile', [EmployeeController::class, 'myProfile'])->name('profile.show');
-Route::get('/my-profile/edit', [EmployeeController::class, 'editProfile'])->name('profile.edit');
-Route::put('/my-profile/update', [EmployeeController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/my-profile', [EmployeeController::class, 'myProfile'])->name('profile.show');
+    Route::get('/my-profile/edit', [EmployeeController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/my-profile/update', [EmployeeController::class, 'updateProfile'])->name('profile.update');
     
     // Clock in/out
     Route::post('/clock-in', [AttendanceController::class, 'clockIn'])->name('attendance.clock-in');
@@ -59,19 +60,13 @@ Route::put('/my-profile/update', [EmployeeController::class, 'updateProfile'])->
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     
-    // ===== ADMIN & ACCOUNTANT =====
-    Route::middleware('role:admin,accountant')->group(function () {
-        Route::resource('payroll', PayrollController::class);
-        Route::post('payroll/bulk/generate', [PayrollController::class, 'bulkGenerate'])->name('payroll.bulk-generate');
-        Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
-        Route::get('/employees/{employee}', [EmployeeController::class, 'show'])->name('employees.show');
-        Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
-        Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
-        Route::get('/departments/{department}', [DepartmentController::class, 'show'])->name('departments.show');
-    });
-    
     // ===== ADMIN ONLY =====
-    Route::middleware('role:admin')->group(function () {
+    Route::middleware(function ($request, $next) {
+        if (!auth()->user()->isAdmin()) {
+            abort(403);
+        }
+        return $next($request);
+    })->group(function () {
         // Full Employee Management
         Route::resource('employees', EmployeeController::class);
         
@@ -96,17 +91,42 @@ Route::put('/my-profile/update', [EmployeeController::class, 'updateProfile'])->
         Route::post('leaves/{leave}/approve', [LeaveController::class, 'approve'])->name('leaves.approve');
         Route::post('leaves/{leave}/reject', [LeaveController::class, 'reject'])->name('leaves.reject');
         
+        // Payroll Management
+        Route::resource('payroll', PayrollController::class);
+        Route::post('payroll/bulk/generate', [PayrollController::class, 'bulkGenerate'])->name('payroll.bulk-generate');
+        
+        // Expense Management
+        Route::resource('expenses', ExpenseController::class)->except(['edit', 'update', 'destroy']);
+        Route::post('expenses/{expense}/approve', [ExpenseController::class, 'approve'])->name('expenses.approve');
+        Route::post('expenses/{expense}/reject', [ExpenseController::class, 'reject'])->name('expenses.reject');
+        
         // Admin Problem Reports
         Route::get('/admin/reports', [AdminProblemReportController::class, 'index'])->name('admin.reports.index');
         Route::get('/admin/reports/{report}', [AdminProblemReportController::class, 'show'])->name('admin.reports.show');
         Route::post('/admin/reports/{report}/respond', [AdminProblemReportController::class, 'respond'])->name('admin.reports.respond');
         Route::post('/admin/reports/{report}/status', [AdminProblemReportController::class, 'updateStatus'])->name('admin.reports.status');
+        
+        // Activity Logs
+        Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('admin.activity-logs');
     });
-
-    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('admin.activity-logs');
-
-    Route::resource('expenses', ExpenseController::class)->except(['edit', 'update', 'destroy']);
-Route::post('expenses/{expense}/approve', [ExpenseController::class, 'approve'])->name('expenses.approve');
-Route::post('expenses/{expense}/reject', [ExpenseController::class, 'reject'])->name('expenses.reject');
+    
+    // ===== ACCOUNTANT (View Only) =====
+    Route::middleware(function ($request, $next) {
+        if (!auth()->user()->isAccountant() && !auth()->user()->isAdmin()) {
+            abort(403);
+        }
+        return $next($request);
+    })->group(function () {
+        Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
+        Route::get('/employees/{employee}', [EmployeeController::class, 'show'])->name('employees.show');
+        Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+        Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
+        Route::get('/departments/{department}', [DepartmentController::class, 'show'])->name('departments.show');
+        Route::resource('payroll', PayrollController::class);
+        Route::post('payroll/bulk/generate', [PayrollController::class, 'bulkGenerate'])->name('payroll.bulk-generate');
+        Route::resource('expenses', ExpenseController::class)->except(['edit', 'update', 'destroy']);
+        Route::post('expenses/{expense}/approve', [ExpenseController::class, 'approve'])->name('expenses.approve');
+        Route::post('expenses/{expense}/reject', [ExpenseController::class, 'reject'])->name('expenses.reject');
+    });
     
 });
