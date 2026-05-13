@@ -15,7 +15,9 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Admin\ProblemReportController as AdminProblemReportController;
 use Illuminate\Support\Facades\Route;
 
-// Guest routes
+
+
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);

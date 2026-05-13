@@ -8,7 +8,7 @@
 </div>
 
 <!-- Admin Sidebar -->
-<div id="sidebar" class="fixed lg:static inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 w-64 bg-white shadow-lg min-h-screen overflow-y-auto">
+<div id="sidebar" class="fixed lg:static inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 w-64 bg-white shadow-lg min-h-screen overflow-hidden">
     
     <div class="flex justify-end p-4 lg:hidden">
         <button id="closeSidebar" class="p-2">
