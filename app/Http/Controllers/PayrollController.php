@@ -22,7 +22,7 @@ class PayrollController extends Controller
             $query->where('employee_id', $request->employee_id);
         }
         
-        $payrolls = $query->paginate(15);
+        $payrolls = $query->paginate(6);
         $employees = Employee::where('status', 'active')->orderBy('first_name')->get();
         
         $stats = [
